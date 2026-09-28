@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kartalar — ko'rib chiqish</title>
+<style>
+  body{margin:0;padding:28px;background:#0a2a25;color:#f2ece0;
+       font-family:system-ui,'Segoe UI',sans-serif;}
+  h1{font-size:19px;letter-spacing:.14em;text-transform:uppercase;color:#f0d489;margin:0 0 4px;}
+  p{font-size:13px;color:rgba(242,236,224,.55);margin:0 0 22px;}
+  .row{display:grid;grid-template-columns:repeat(9,1fr);gap:10px;max-width:1080px;margin-bottom:16px;}
+  .c{border-radius:9px;overflow:hidden;box-shadow:0 8px 20px rgba(0,0,0,.45);}
+  .c svg{width:100%;height:auto;display:block;}
+  @media(max-width:800px){.row{grid-template-columns:repeat(5,1fr);}}
+</style>
+</head>
+<body>
+  <h1>36 karta</h1>
+  <p>Chillik ♣ · Qarg'a ♠ · G'isht ♦ · Tappon ♥ — kuch tartibi: 6 7 8 9 V D K 10 T</p>
+  <div id="out"></div>
+  <script src="cards.js"></script>
+  <script>
+    const S=['C','S','D','H'], R=['6','7','8','9','J','Q','K','10','A'];
+    let html='';
+    for(const s of S){
+      html+='<div class="row">';
+      for(const r of R) html+='<div class="c">'+Cards.face(r+s)+'</div>';
+      html+='</div>';
+    }
+    html+='<div class="row"><div class="c">'+Cards.back()+'</div></div>';
+    document.getElementById('out').innerHTML=html;
+  </script>
+</body>
+</html>

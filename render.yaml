@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: kozol
+    runtime: node
+    region: frankfurt        # O'zbekistonga eng yaqin bepul region
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /ping
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
+      # Hisob nusxalarini imzolash kaliti. Render uni bir marta yaratadi va
+      # keyin o'zgartirmaydi — shuning uchun server qayta ishga tushsa ham
+      # o'yinchilarning level va tangalari brauzerdagi nusxadan tiklanadi.
+      - key: KOZOL_SECRET
+        generateValue: true
+      # Ovozli chat ba'zi mobil tarmoqlarda ulanmasa — TURN server qo'shing:
+      # - key: TURN_URL
+      #   value: turn:your-turn-server:3478
+      # - key: TURN_USER
+      #   value: login
+      # - key: TURN_PASS
+      #   value: parol

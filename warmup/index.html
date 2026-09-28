@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kozol — o'yinga kirish</title>
+<style>
+  :root{--gold:#d9b45b;--gold-soft:#f0d489;--cream:#f2ece0;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    min-height:100dvh;display:grid;place-items:center;padding:24px;
+    font-family:system-ui,-apple-system,'Segoe UI',sans-serif;color:var(--cream);
+    background:radial-gradient(120% 90% at 50% 0%,#10473c 0%,#0a2a25 42%,#05130f 100%);
+    text-align:center;
+  }
+  .card{
+    width:96px;height:134px;margin:0 auto 28px;border-radius:11px;
+    background:#7b1420;border:2px solid var(--gold);
+    display:grid;place-items:center;
+    font:700 17px/1 Georgia,serif;letter-spacing:2px;color:var(--gold-soft);
+    box-shadow:0 18px 40px rgba(0,0,0,.5);
+    animation:flip 2.4s ease-in-out infinite;
+  }
+  @keyframes flip{
+    0%,100%{transform:rotateY(0) translateY(0);}
+    50%{transform:rotateY(180deg) translateY(-10px);}
+  }
+  h1{font-size:20px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-soft);margin-bottom:10px;}
+  p{font-size:13.5px;color:rgba(242,236,224,.62);line-height:1.6;max-width:340px;margin:0 auto;}
+  .bar{
+    width:min(300px,80vw);height:5px;margin:24px auto 12px;border-radius:99px;
+    background:rgba(255,255,255,.1);overflow:hidden;
+  }
+  .bar i{display:block;height:100%;width:0;border-radius:99px;
+    background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .9s linear;}
+  .tick{font-size:11.5px;color:rgba(242,236,224,.4);letter-spacing:.06em;}
+  a.manual{display:inline-block;margin-top:22px;font-size:13px;color:var(--gold-soft);}
+  .err{color:#ff9a9a;}
+  @media (prefers-reduced-motion:reduce){.card{animation:none;}}
+</style>
+</head>
+<body>
+<div>
+  <div class="card">ZOT</div>
+  <h1 id="title">Server uyg'onmoqda</h1>
+  <p id="msg">Bepul serverda birinchi kirish biroz vaqt oladi. Tayyor bo'lishi bilan
+     o'yin o'zi ochiladi — sahifani yopmang.</p>
+  <div class="bar"><i id="bar"></i></div>
+  <div class="tick" id="tick">0 soniya</div>
+  <a class="manual" id="manual" href="#" style="display:none">To'g'ridan-to'g'ri kirish →</a>
+</div>
+
+<script>
+  /* ====== SHU YERNI O'ZGARTIRING ====== */
+  const SERVER = 'https://kozol-xxxx.onrender.com';   // Render manzilingiz
+  /* ==================================== */
+
+  const bar = document.getElementById('bar');
+  const tick = document.getElementById('tick');
+  const title = document.getElementById('title');
+  const msg = document.getElementById('msg');
+  const manual = document.getElementById('manual');
+  manual.href = SERVER;
+
+  let t = 0;
+  const EXPECT = 55;                       // taxminiy uyg'onish vaqti, soniya
+
+  setInterval(() => {
+    t++;
+    tick.textContent = t + ' soniya';
+    bar.style.width = Math.min(96, (t / EXPECT) * 100) + '%';
+    if (t === 20) manual.style.display = '';
+    if (t === 90) {
+      title.textContent = 'Kutilganidan uzoqroq…';
+      title.classList.add('err');
+      msg.textContent = 'Server javob bermayapti. Pastdagi havola orqali qo\'lda urinib ko\'ring.';
+    }
+  }, 1000);
+
+  async function probe() {
+    try {
+      const r = await fetch(SERVER + '/ping', { cache: 'no-store' });
+      if (r.ok) {
+        bar.style.width = '100%';
+        title.textContent = 'Tayyor!';
+        location.href = SERVER;
+        return;
+      }
+    } catch (e) { /* hali uxlayapti */ }
+    setTimeout(probe, 2500);
+  }
+  probe();
+</script>
+</body>
+</html>
